@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.material:material:1.11.0")
     // Compose
     implementation(platform("androidx.compose:compose-bom:2024.02.00"))
     implementation("androidx.compose.ui:ui")
