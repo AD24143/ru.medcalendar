@@ -1,37 +1,29 @@
 package com.example.rumedcalendar.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.example.rumedcalendar.ui.screens.upload.ExtractedUploadItemUi
-import com.example.rumedcalendar.ui.screens.upload.UploadScreen
+import com.example.rumedcalendar.ui.screens.calendar.CalendarEventDotUi
+import com.example.rumedcalendar.ui.screens.calendar.CalendarEventType
+import com.example.rumedcalendar.ui.screens.calendar.CalendarMonthScreen
+import java.time.LocalDate
 
 @Composable
 fun MedCalApp() {
-    var extractedItems by remember {
-        mutableStateOf(
-            listOf(
-                ExtractedUploadItemUi(
-                    id = "preview_1",
-                    title = "Lisinopril 10 mg",
-                    details = "Take once every morning for blood pressure control."
-                )
+    val today = remember { LocalDate.now() }
+    val mockEvents = remember {
+        mapOf(
+            today to listOf(
+                CalendarEventDotUi(type = CalendarEventType.MEDICATION),
+                CalendarEventDotUi(type = CalendarEventType.LAB)
+            ),
+            today.plusDays(1) to listOf(CalendarEventDotUi(type = CalendarEventType.DOCTOR_ORANGE)),
+            today.plusDays(3) to listOf(
+                CalendarEventDotUi(type = CalendarEventType.DOCTOR_RED),
+                CalendarEventDotUi(type = CalendarEventType.DOCTOR_YELLOW),
+                CalendarEventDotUi(type = CalendarEventType.MEDICATION)
             )
         )
     }
 
-    UploadScreen(
-        extractedItems = extractedItems,
-        onPickFileClick = {
-            // UI-only stub; file picker logic will be connected to existing layers later.
-        },
-        onTakePhotoClick = {
-            // UI-only stub; camera logic will be connected to existing layers later.
-        },
-        onConfirmItemClick = { id ->
-            extractedItems = extractedItems.filterNot { it.id == id }
-        }
-    )
+    CalendarMonthScreen(eventsByDate = mockEvents)
 }
