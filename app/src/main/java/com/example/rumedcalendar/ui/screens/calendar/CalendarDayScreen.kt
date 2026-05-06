@@ -138,7 +138,7 @@ private fun DayEventCard(
             if (event.type == DayEventType.MEDICATION) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     OutlinedButton(onClick = onTakenClick, enabled = !event.isTaken) {
-                        Text(text = if (event.isTaken) "Taken" else "Mark as Taken")
+                        Text(text = "Taken")
                     }
                 }
             }
