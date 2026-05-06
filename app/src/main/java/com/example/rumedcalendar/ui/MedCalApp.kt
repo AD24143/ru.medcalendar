@@ -1,29 +1,59 @@
 package com.example.rumedcalendar.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.example.rumedcalendar.ui.screens.calendar.CalendarEventDotUi
-import com.example.rumedcalendar.ui.screens.calendar.CalendarEventType
-import com.example.rumedcalendar.ui.screens.calendar.CalendarMonthScreen
+import androidx.compose.runtime.setValue
+import com.example.rumedcalendar.ui.screens.calendar.CalendarDayScreen
+import com.example.rumedcalendar.ui.screens.calendar.DayEventType
+import com.example.rumedcalendar.ui.screens.calendar.DayEventUi
 import java.time.LocalDate
 
 @Composable
 fun MedCalApp() {
     val today = remember { LocalDate.now() }
-    val mockEvents = remember {
-        mapOf(
-            today to listOf(
-                CalendarEventDotUi(type = CalendarEventType.MEDICATION),
-                CalendarEventDotUi(type = CalendarEventType.LAB)
-            ),
-            today.plusDays(1) to listOf(CalendarEventDotUi(type = CalendarEventType.DOCTOR_ORANGE)),
-            today.plusDays(3) to listOf(
-                CalendarEventDotUi(type = CalendarEventType.DOCTOR_RED),
-                CalendarEventDotUi(type = CalendarEventType.DOCTOR_YELLOW),
-                CalendarEventDotUi(type = CalendarEventType.MEDICATION)
+    var isRefreshing by remember { mutableStateOf(false) }
+    var dayEvents by remember {
+        mutableStateOf(
+            listOf(
+                DayEventUi(
+                    id = "d1",
+                    title = "Metformin 500 mg",
+                    timeText = "08:00",
+                    details = "Take after breakfast.",
+                    type = DayEventType.MEDICATION
+                ),
+                DayEventUi(
+                    id = "d2",
+                    title = "Blood Test",
+                    timeText = "11:30",
+                    details = "Complete fasting panel.",
+                    type = DayEventType.LAB_TEST
+                ),
+                DayEventUi(
+                    id = "d3",
+                    title = "Endocrinologist Visit",
+                    timeText = "16:00",
+                    details = "Discuss glucose trend.",
+                    type = DayEventType.DOCTOR_VISIT
+                )
             )
         )
     }
 
-    CalendarMonthScreen(eventsByDate = mockEvents)
+    CalendarDayScreen(
+        date = today,
+        events = dayEvents,
+        isRefreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+            isRefreshing = false
+        },
+        onTakenClick = { id ->
+            dayEvents = dayEvents.map { event ->
+                if (event.id == id) event.copy(isTaken = true) else event
+            }
+        }
+    )
 }
